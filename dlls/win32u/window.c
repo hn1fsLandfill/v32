@@ -2818,6 +2818,10 @@ static BOOL get_maximized_rect( HWND hwnd, RECT *rect )
     style = get_window_long( hwnd, GWL_STYLE );
     if (style & WS_MAXIMIZEBOX && (style & WS_CAPTION) == WS_CAPTION && !(style & WS_CHILD))
         *rect = mon_info.rcWork;
+
+    FIXME("get taskbars height from explorer\n");
+    rect->bottom -= 24;
+
     return TRUE;
 }
 
