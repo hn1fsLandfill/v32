@@ -10212,7 +10212,7 @@ msgid "v32 &license"
 msgstr "&Licencja v32"
 
 #: dlls/shell32/shell32.rc:330
-msgid "Running on %s %s %s"
+msgid "Running on %s %s (%s)"
 msgstr "Uruchomiony na %s %s (%s)"
 
 #: dlls/shell32/shell32.rc:331
@@ -15022,7 +15022,7 @@ msgid "&Run..."
 msgstr "Urucho&m..."
 
 #: programs/explorer/explorer.rc:36
-msgid "E&xit desktop"
+msgid "&Log off"
 msgstr "&Wyloguj"
 
 #: programs/explorer/explorer.rc:37
