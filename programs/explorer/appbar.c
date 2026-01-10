@@ -199,21 +199,21 @@ static UINT_PTR handle_appbarmessage(DWORD msg, struct appbar_data_msg *abd)
         return TRUE;
     case ABM_GETSTATE:
         FIXME( "SHAppBarMessage(ABM_GETSTATE): stub\n" );
-        return ABS_ALWAYSONTOP | ABS_AUTOHIDE;
+        return ABS_ALWAYSONTOP | (0 ? ABS_AUTOHIDE: 0);
     case ABM_GETTASKBARPOS:
         FIXME( "SHAppBarMessage(ABM_GETTASKBARPOS, hwnd=%p): stub\n", hwnd );
         /* Report the taskbar is at the bottom of the screen. */
         abd->rc.left = 0;
         abd->rc.right = GetSystemMetrics(SM_CXSCREEN);
         abd->rc.bottom = GetSystemMetrics(SM_CYSCREEN);
-        abd->rc.top = abd->rc.bottom-1;
+        abd->rc.top = abd->rc.bottom-25;
         abd->uEdge = ABE_BOTTOM;
         return TRUE;
     case ABM_ACTIVATE:
         return TRUE;
     case ABM_GETAUTOHIDEBAR:
         FIXME( "SHAppBarMessage(ABM_GETAUTOHIDEBAR, hwnd=%p, edge=%x): stub\n", hwnd, abd->uEdge );
-        return 0;
+        return (UINT_PTR)NULL;
     case ABM_SETAUTOHIDEBAR:
         FIXME( "SHAppBarMessage(ABM_SETAUTOHIDEBAR, hwnd=%p, edge=%x, lparam=%s): stub\n", hwnd,
                abd->uEdge, wine_dbgstr_longlong( abd->lParam ) );
