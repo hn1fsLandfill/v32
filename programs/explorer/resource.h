@@ -28,5 +28,6 @@
 #define IDS_EXIT_LABEL 5
 #define IDS_EXIT_PROMPT 6
 #define IDS_DESKTOP_TITLE 7
+#define IDM_CONTEXTMENU_TASKMGR 1000
 
 #endif

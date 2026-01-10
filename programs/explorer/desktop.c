@@ -1239,10 +1239,11 @@ void manage_desktop( WCHAR *arg )
         if (!get_default_desktop_size( name, &width, &height )) width = height = 0;
     }
 
-    enable_shell = name ? get_default_enable_shell( name ) : FALSE;
-    enable_launchers = get_default_enable_launchers();
-    show_systray = get_default_show_systray( name );
-    no_tray_items = get_no_tray_items_display();
+    // always enable the shell no matter what
+    enable_shell = 1; // name ? get_default_enable_shell( name ) : FALSE;
+    enable_launchers = 1; // get_default_enable_launchers();
+    show_systray = 1; // get_default_show_systray( name );
+    no_tray_items = 0; // get_no_tray_items_display();
 
     UuidCreate( &guid );
     TRACE( "display guid %s\n", debugstr_guid(&guid) );
@@ -1291,7 +1292,8 @@ void manage_desktop( WCHAR *arg )
         initialize_appbar();
 
         initialize_systray( using_root, enable_shell, show_systray, no_tray_items );
-        if (!using_root && enable_launchers) initialize_launchers( hwnd );
+        // if (!using_root && enable_launchers)
+        initialize_launchers( hwnd );
 
         if ((shell32 = LoadLibraryW( L"shell32.dll" )) &&
             (pShellDDEInit = (void *)GetProcAddress( shell32, (LPCSTR)188)))

@@ -390,7 +390,7 @@ static void shut_down(HWND hwnd)
     int ret;
 
     LoadStringW(NULL, IDS_EXIT_PROMPT, prompt, ARRAY_SIZE(prompt));
-    ret = MessageBoxW(hwnd, prompt, L"Wine", MB_YESNO|MB_ICONQUESTION|MB_SYSTEMMODAL);
+    ret = MessageBoxW(hwnd, prompt, L"v32", MB_YESNO|MB_ICONQUESTION|MB_SYSTEMMODAL);
     if (ret == IDYES)
         ExitWindows(0, 0);
 }

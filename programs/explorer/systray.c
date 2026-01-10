@@ -803,7 +803,7 @@ static void cleanup_systray_window( HWND hwnd )
 static void sync_taskbar_buttons(void)
 {
     struct taskbar_button *win;
-    int pos = 0, count = 0;
+    int pos = 2, count = 0;
     int width = taskbar_button_width;
     int right = tray_width - nb_displayed * icon_cx;
     HWND foreground = GetAncestor( GetForegroundWindow(), GA_ROOTOWNER );
@@ -815,9 +815,9 @@ static void sync_taskbar_buttons(void)
     {
         if (!win->hwnd)  /* start button */
         {
-            SetWindowPos( win->button, 0, pos, 0, start_button_width, tray_height,
+            SetWindowPos( win->button, 0, pos, 2, start_button_width, tray_height-4,
                           SWP_NOZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW );
-            pos += start_button_width;
+            pos += start_button_width+4;
             continue;
         }
         win->active = (win->hwnd == foreground);
@@ -834,10 +834,10 @@ static void sync_taskbar_buttons(void)
         if (!win->hwnd) continue;  /* start button */
         if (win->visible && right - pos >= width)
         {
-            SetWindowPos( win->button, 0, pos, 0, width, tray_height,
+            SetWindowPos( win->button, 0, pos, 2, width, tray_height-4,
                           SWP_NOZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW );
             InvalidateRect( win->button, NULL, TRUE );
-            pos += width;
+            pos += width+2;
         }
         else SetWindowPos( win->button, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOACTIVATE | SWP_HIDEWINDOW );
     }
@@ -1047,11 +1047,18 @@ static void click_taskbar_button( HWND button )
     SetForegroundWindow( hwnd );
 }
 
-static void show_taskbar_contextmenu( HWND button, LPARAM lparam )
+static void show_taskbar_contextmenu( HWND button, LPARAM lparam, POINT mouse )
 {
     ULONG_PTR id = GetWindowLongPtrW( button, GWLP_ID );
 
     if (id) SendNotifyMessageW( (HWND)id, WM_POPUPSYSTEMMENU, 0, lparam );
+    else {
+        HMENU contextMenu = CreatePopupMenu();
+        InsertMenuA(contextMenu, 0, MF_BYPOSITION | MF_STRING, IDM_CONTEXTMENU_TASKMGR, "Properties");
+        InsertMenuA(contextMenu, 0, MF_BYPOSITION | MF_STRING, IDM_CONTEXTMENU_TASKMGR, "Task Manager");
+        SetForegroundWindow(button);
+        TrackPopupMenu(contextMenu, TPM_BOTTOMALIGN | TPM_LEFTALIGN, mouse.x, mouse.y, 0, button, NULL);
+    }
 }
 
 static void do_hide_systray(void)
@@ -1085,7 +1092,7 @@ static void do_show_systray(void)
     GetTextExtentPointW( hdc, start_label, lstrlenW(start_label), &size );
     /* add some margins (FIXME) */
     size.cx += 12 + GetSystemMetrics( SM_CXSMICON );
-    size.cy += 4;
+    size.cy += 8;
     ReleaseDC( 0, hdc );
     DeleteObject( font );
 
@@ -1105,9 +1112,7 @@ static LRESULT WINAPI shell_traywnd_proc( HWND hwnd, UINT msg, WPARAM wparam, LP
         return handle_incoming((HWND)wparam, (COPYDATASTRUCT *)lparam);
 
     case WM_DISPLAYCHANGE:
-        if (!show_systray) do_hide_systray();
-        else if (!nb_displayed && !enable_taskbar) do_hide_systray();
-        else do_show_systray();
+        do_show_systray();
         break;
 
     case WM_WINDOWPOSCHANGING:
@@ -1138,7 +1143,9 @@ static LRESULT WINAPI shell_traywnd_proc( HWND hwnd, UINT msg, WPARAM wparam, LP
         break;
 
     case WM_COMMAND:
-        if (HIWORD(wparam) == BN_CLICKED)
+        if (LOWORD(wparam) == IDM_CONTEXTMENU_TASKMGR && HIWORD(wparam) == BN_CLICKED) {
+            ShellExecuteA(hwnd, NULL, "taskmgr", NULL, NULL, SW_NORMAL);
+        } else if (HIWORD(wparam) == BN_CLICKED)
         {
             if (LOWORD(wparam) == TRAY_MINIMIZE_ALL || LOWORD(wparam) == TRAY_MINIMIZE_ALL_UNDO)
             {
@@ -1150,7 +1157,12 @@ static LRESULT WINAPI shell_traywnd_proc( HWND hwnd, UINT msg, WPARAM wparam, LP
         break;
 
     case WM_CONTEXTMENU:
-        show_taskbar_contextmenu( (HWND)wparam, lparam );
+        DWORD raw_mouse_pos = GetMessagePos();
+        POINT mouse = (POINT){
+            .x = LOWORD(raw_mouse_pos),
+            .y = HIWORD(raw_mouse_pos)
+        };
+        show_taskbar_contextmenu( (HWND)wparam, lparam, mouse );
         break;
 
     case WM_MOUSEACTIVATE:
@@ -1215,8 +1227,8 @@ void initialize_systray( BOOL arg_using_root, BOOL arg_enable_shell, BOOL arg_sh
 
     if (arg_using_root)
     {
-        show_systray = arg_show_systray;
-        enable_taskbar = FALSE;
+        show_systray = TRUE;
+        enable_taskbar = TRUE;
         enable_dock = TRUE;
     }
     else
@@ -1240,23 +1252,12 @@ void initialize_systray( BOOL arg_using_root, BOOL arg_enable_shell, BOOL arg_sh
         return;
     }
 
-    if (enable_taskbar)
-    {
-        SystemParametersInfoW( SPI_GETWORKAREA, 0, &work_rect, 0 );
-        SetRect( &primary_rect, 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ) );
-        SubtractRect( &taskbar_rect, &primary_rect, &work_rect );
-
-        tray_window = CreateWindowExW( WS_EX_NOACTIVATE, shell_traywnd_class.lpszClassName, NULL, WS_POPUP,
-                                       taskbar_rect.left, taskbar_rect.top, taskbar_rect.right - taskbar_rect.left,
-                                       taskbar_rect.bottom - taskbar_rect.top, 0, 0, 0, 0 );
-    }
-    else
-    {
-        SIZE size = get_window_size();
-        tray_window = CreateWindowExW( 0, shell_traywnd_class.lpszClassName, L"", WS_CAPTION | WS_SYSMENU,
-                                       CW_USEDEFAULT, CW_USEDEFAULT, size.cx, size.cy, 0, 0, 0, 0 );
-        NtUserMessageCall( tray_window, WINE_SYSTRAY_DOCK_INIT, 0, 0, NULL, NtUserSystemTrayCall, FALSE );
-    }
+    SystemParametersInfoW( SPI_GETWORKAREA, 0, &work_rect, 0 );
+    SetRect( &primary_rect, 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ) );
+    SubtractRect( &taskbar_rect, &primary_rect, &work_rect );
+    tray_window = CreateWindowExW( WS_EX_NOACTIVATE, shell_traywnd_class.lpszClassName, NULL, WS_POPUP,
+                                   taskbar_rect.left, taskbar_rect.top, taskbar_rect.right - taskbar_rect.left,
+                                   taskbar_rect.bottom - taskbar_rect.top, 0, 0, 0, 0 );
 
     if (!tray_window)
     {
