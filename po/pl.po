@@ -5,6 +5,7 @@
 # Marcin Mikołajczak <me@m4sk.in>, 2017, 2018.
 # Bartosz Kosiorek <gang65@poczta.onet.pl>, 2023.
 # Adam Markowski <wbcwknvstb@proton.me>, 2025.
+# hn1f <hn1f@proton.me>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Wine\n"
@@ -10207,12 +10208,12 @@ msgid "About %s"
 msgstr "Informacje o %s"
 
 #: dlls/shell32/shell32.rc:325
-msgid "Wine &license"
-msgstr "&Licencja Wine"
+msgid "v32 &license"
+msgstr "&Licencja v32"
 
 #: dlls/shell32/shell32.rc:330
-msgid "Running on %s"
-msgstr "Uruchomiony na %s"
+msgid "Running on %s %s %s"
+msgstr "Uruchomiony na %s %s (%s)"
 
 #: dlls/shell32/shell32.rc:331
 msgid "Wine was brought to you by:"
@@ -10224,10 +10225,10 @@ msgstr "Uruchom"
 
 #: dlls/shell32/shell32.rc:340
 msgid ""
-"Type the name of a program, folder, document, or Internet resource, and Wine "
+"Type the name of a program, folder, document, or Internet resource, and v32 "
 "will open it for you."
 msgstr ""
-"Wpisz nazwę programu, katalogu lub dokumentu, a Wine otworzy go dla ciebie."
+"Wpisz nazwę programu, katalogu lub dokumentu, a v32 otworzy go dla ciebie."
 
 #: dlls/shell32/shell32.rc:341
 msgid "&Open:"
@@ -15009,8 +15010,8 @@ msgstr ""
 "Użycie: dxdiag [/whql:off | /whql:on] [/t nazwa_pliku | /x nazwa_pliku]"
 
 #: programs/explorer/explorer.rc:32
-msgid "Wine Explorer"
-msgstr "Eksplorator Wine"
+msgid "v32 Explorer"
+msgstr "Eksplorator v32"
 
 #: programs/explorer/explorer.rc:34
 msgid "Start"
@@ -15022,18 +15023,17 @@ msgstr "Urucho&m..."
 
 #: programs/explorer/explorer.rc:36
 msgid "E&xit desktop"
-msgstr "&Zamknij pulpit"
+msgstr "&Wyloguj"
 
 #: programs/explorer/explorer.rc:37
 msgid ""
-"Are you sure you want to close all programs and exit the virtual desktop?"
+"Are you sure you want to close all programs and log off?"
 msgstr ""
-"Czy jesteś pewien, że chcesz zamknąć wszystkie programy i opuścić wirtualny "
-"pulpit?"
+"Czy jesteś pewien, że chcesz zamknąć wszystkie programy i wylogować?"
 
 #: programs/explorer/explorer.rc:38
-msgid "Wine Desktop"
-msgstr "Pulpit Wine"
+msgid "v32 Desktop"
+msgstr "Pulpit v32"
 
 #: programs/findstr/findstr.rc:28
 msgid "Usage: findstr /options string\n"
