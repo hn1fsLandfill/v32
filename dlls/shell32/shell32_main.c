@@ -904,12 +904,21 @@ static INT_PTR CALLBACK AboutDlgProc( HWND hWnd, UINT msg, WPARAM wParam,
         {
             ABOUT_INFO *info = (ABOUT_INFO *)lParam;
             WCHAR template[512], buffer[512], version[64];
+            const char *c_kernel;
+            const char *c_kernel_version;
+            WCHAR *kernel[64];
+            WCHAR *kernel_version[64];
+
             const char *(CDECL *wine_get_build_id)(void);
+            const char *(CDECL *wine_get_host_version)( const char **sysname, const char **release );
 
             if (info)
             {
                 wine_get_build_id = (void *)GetProcAddress( GetModuleHandleA("ntdll.dll"),
                                                             "wine_get_build_id");
+
+                wine_get_host_version = (void *)GetProcAddress( GetModuleHandleA("ntdll.dll"),
+                                                            "wine_get_host_version");
                 SendDlgItemMessageW(hWnd, stc1, STM_SETICON,(WPARAM)info->hIcon, 0);
                 GetWindowTextW( hWnd, template, ARRAY_SIZE(template) );
                 swprintf( buffer, ARRAY_SIZE(buffer), template, info->szApp );
@@ -918,10 +927,13 @@ static INT_PTR CALLBACK AboutDlgProc( HWND hWnd, UINT msg, WPARAM wParam,
                 SetWindowTextW( GetDlgItem(hWnd, IDC_ABOUT_STATIC_TEXT2), info->szOtherStuff );
                 GetWindowTextW( GetDlgItem(hWnd, IDC_ABOUT_STATIC_TEXT3),
                                 template, ARRAY_SIZE(template) );
-                if (wine_get_build_id)
+                if (wine_get_build_id && wine_get_host_version)
                 {
+                    wine_get_host_version(&c_kernel, &c_kernel_version);
+                    MultiByteToWideChar( CP_UTF8, 0, c_kernel, -1, kernel, ARRAY_SIZE(kernel) );
+                    MultiByteToWideChar( CP_UTF8, 0, c_kernel_version, -1, kernel_version, ARRAY_SIZE(kernel_version) );
                     MultiByteToWideChar( CP_UTF8, 0, wine_get_build_id(), -1, version, ARRAY_SIZE(version) );
-                    swprintf( buffer, ARRAY_SIZE(buffer), template, version );
+                    swprintf( buffer, ARRAY_SIZE(buffer), template, kernel, kernel_version, version );
                     SetWindowTextW( GetDlgItem(hWnd, IDC_ABOUT_STATIC_TEXT3), buffer );
                 }
                 hWndCtl = GetDlgItem(hWnd, IDC_ABOUT_LISTBOX);
