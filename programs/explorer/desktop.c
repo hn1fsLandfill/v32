@@ -1238,6 +1238,14 @@ void manage_desktop( WCHAR *arg )
     {
         if (!get_default_desktop_size( name, &width, &height )) width = height = 0;
     }
+    else
+    {
+        // ALWAYS create a desktop no matter what
+        // The root desktop shouldn't be existent as v32 is a compositor
+        name = L"Default";
+        width = 800;
+        height = 600;
+    }
 
     // always enable the shell no matter what
     enable_shell = 1; // name ? get_default_enable_shell( name ) : FALSE;
