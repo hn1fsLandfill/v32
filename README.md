@@ -3,7 +3,9 @@
 fancy wine fork with the goal of making wine a compositor and improving some corners (e.g taskbar, etc)
 
 todo?:
+
 [ ] modify explorer to mimick 2000's shell or replace it with one from reactos
+
 [ ] implement a libinput+drm driver
 
 ## INTRODUCTION
