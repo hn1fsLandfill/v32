@@ -1,6 +1,10 @@
 MODULE = winesdl.drv
+UNIXLIB = winesdl.so
+UNIX_LIBS = -lwin32u $(SDL2_LIBS)
+UNIX_CFLAGS = $(SDL2_CFLAGS) 
 
-C_SRCS = \
-	dllmain.c
+SOURCES = \
+	dllmain.c \
+	sdl_main.c
 
 RC_SRCS = version.rc

@@ -17,20 +17,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  */
+
+#ifndef __WINE_SDLDRV_UNIXLIB_H
+#define __WINE_SDLDRV_UNIXLIB_H
+
 #include <stdarg.h>
-#include "windef.h"
-#include "winbase.h"
+#include "winternl.h"
 #include "wine/unixlib.h"
-#include "unixlib.h"
 
-BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, void *reserved)
+#define SDL_UNIX_CALL(func, params) WINE_UNIX_CALL(sdl_unix_func_ ## func, params)
+
+enum sdl_unix_func
 {
-    if (reason != DLL_PROCESS_ATTACH) return TRUE;
-    DisableThreadLibraryCalls(instance);
-	if (__wine_init_unix_call()) return FALSE;
+    sdl_unix_func_init,
+    sdl_unix_func_count,
+};
 
-	if (SDL_UNIX_CALL(init, NULL))
-        return FALSE;
-
-    return TRUE;
-}
+#endif /* __WINE_SDLDRV_UNIXLIB_H */
