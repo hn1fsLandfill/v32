@@ -1,0 +1,6 @@
+MODULE = winesdl.drv
+
+C_SRCS = \
+	dllmain.c
+
+RC_SRCS = version.rc
