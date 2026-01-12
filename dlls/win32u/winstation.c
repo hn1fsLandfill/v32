@@ -812,10 +812,9 @@ HWND get_desktop_window(void)
     if (!thread_info->top_window)
     {
         static const WCHAR appnameW[] = {'\\','?','?','\\','C',':','\\','w','i','n','d','o','w','s',
-            '\\','s','y','s','t','e','m','3','2','\\','e','x','p','l','o','r','e','r','.','e','x','e',0};
+            '\\','s','y','s','t','e','m','3','2','\\','v','3','2','m','.','e','x','e',0};
         static const WCHAR cmdlineW[] = {'"','C',':','\\','w','i','n','d','o','w','s','\\',
-            's','y','s','t','e','m','3','2','\\','e','x','p','l','o','r','e','r','.','e','x','e','"',
-            ' ','/','d','e','s','k','t','o','p',0};
+            's','y','s','t','e','m','3','2','\\','v','3','2','m','.','e','x','e',0};
         static const WCHAR system_dir[] = {'C',':','\\','w','i','n','d','o','w','s','\\',
             's','y','s','t','e','m','3','2','\\',0};
         RTL_USER_PROCESS_PARAMETERS params = { sizeof(params), sizeof(params) };

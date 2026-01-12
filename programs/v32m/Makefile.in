@@ -1,0 +1,7 @@
+MODULE    = v32m.exe
+IMPORTS   = rpcrt4 user32 advapi32 win32u
+
+EXTRADLLFLAGS = -mwindows  -municode
+
+SOURCES = \
+	main.c
