@@ -189,9 +189,9 @@
  197 stub SHGlobalDefect
  198 stdcall -noname SHAbortInvokeCommand()
  199 stub SHGetFileIcon
- 200 stub SHLocalAlloc
- 201 stub SHLocalFree
- 202 stub SHLocalReAlloc
+ 200 stdcall SHCreateDesktop(ptr)
+ 201 stdcall SHDesktopMessageLoop(ptr)
+ 202 stub DDEHandleViewFolderNotify
  203 stub AddCommasW
  204 stub ShortSizeFormatW
  205 stdcall Printer_LoadIconsW(wstr ptr ptr)

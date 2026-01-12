@@ -2088,3 +2088,25 @@ HRESULT WINAPI ExplorerBrowser_Constructor(IUnknown *pUnkOuter, REFIID riid, voi
     TRACE("--(%p)\n", ppv);
     return ret;
 }
+
+/* desktop shell functions */
+/* stubs for now */
+
+HANDLE WINAPI SHCreateDesktop( /*IShellDesktopTray*/ void *Tray)
+{
+    SetLastError(ERROR_INVALID_PARAMETER);
+    return NULL;
+}
+
+BOOL WINAPI SHDesktopMessageLoop(HANDLE hDesktop)
+{
+    MSG msg;
+
+    while (GetMessageW(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessageW(&msg);
+    }
+
+    return TRUE;
+}
