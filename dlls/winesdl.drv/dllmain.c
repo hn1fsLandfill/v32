@@ -20,7 +20,6 @@
 #include <stdarg.h>
 #include "windef.h"
 #include "winbase.h"
-#include "wine/unixlib.h"
 #include "unixlib.h"
 
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, void *reserved)
