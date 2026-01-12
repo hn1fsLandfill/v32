@@ -5,6 +5,7 @@ UNIX_CFLAGS = $(SDL2_CFLAGS)
 
 SOURCES = \
 	dllmain.c \
-	sdl_main.c
+	sdl_main.c \
+	window.c
 
 RC_SRCS = version.rc

@@ -22,14 +22,26 @@
 #include "winbase.h"
 #include "unixlib.h"
 
+static DWORD WINAPI sdl_event_thread(void *arg)
+{
+    SDL_UNIX_CALL(poll_events, NULL);
+    TerminateProcess(GetCurrentProcess(), 1);
+    return 0;
+}
+
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, void *reserved)
 {
+	DWORD tid;
+
     if (reason != DLL_PROCESS_ATTACH) return TRUE;
     DisableThreadLibraryCalls(instance);
 	if (__wine_init_unix_call()) return FALSE;
 
 	if (SDL_UNIX_CALL(init, NULL))
         return FALSE;
+
+	/* Read wayland events from a dedicated thread. */
+    CloseHandle(CreateThread(NULL, 0, sdl_event_thread, NULL, 0, &tid));
 
     return TRUE;
 }

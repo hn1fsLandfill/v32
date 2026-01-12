@@ -30,6 +30,7 @@
 enum sdl_unix_func
 {
     sdl_unix_func_init,
+	sdl_unix_func_poll_events,
     sdl_unix_func_count,
 };
 
